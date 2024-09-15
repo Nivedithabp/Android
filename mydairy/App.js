@@ -1,59 +1,62 @@
-import { StatusBar } from 'expo-status-bar';
-import { ScrollView, StyleSheet, Text, View, Image, Button, Alert } from 'react-native';
+import React from 'react';
+import { ScrollView, StyleSheet, Text, View, Image, Button, Alert, SafeAreaView } from 'react-native';
+import Navbar from './components/Navbar'; // Adjust the import path as necessary
+import { Calendar } from 'react-native-calendars';
 const myImg = require('./assets/icon.png');
 
 export default function App() {
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Welcome Back</Text>
-      </View>
+    <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        {/* Header */}
+        <View style={styles.header}>
+          <Text style={styles.headerText}>Welcome Back</Text>
+        </View>
 
-      {/* Image */}
-      <Image
-        source={myImg}
-        style={styles.mainImage}
-      />
+        {/* Image */}
+        <Image source={myImg} style={styles.mainImage} />
 
-      {/* Section */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>About Us</Text>
-        <Text style={styles.sectionText}>Tell us about your day</Text>
-      </View>
-
-      {/* Button */}
-      <View style={styles.buttonContainer}>
-        <Button
-          title="Start"
-          color="#841584"
-          onPress={() => Alert.alert('Start blogging')}
+        {/* Calendar */}
+        <Calendar
+          style={styles.calendar}
+          // Add other calendar properties here if needed
+          onDayPress={(day) => console.log('Selected day', day)}
         />
-      </View>
 
-      {/* Footer */}
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>© 2024 Your Company</Text>
-      </View>
+        {/* Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>About Us</Text>
+          <Text style={styles.sectionText}>Tell us about your day</Text>
+        </View>
 
-      <StatusBar style="auto" />
-    </ScrollView>
+        {/* Button */}
+        <View style={styles.buttonContainer}>
+          <Button title="Start" color="#841584" onPress={() => Alert.alert('Start blogging')} />
+        </View>
+      </ScrollView>
+
+      {/* Navbar */}
+      <Navbar />
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
+    flex: 1,
     backgroundColor: '#f5f5f5',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 20,
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+    justifyContent: 'flex-start',
+    paddingBottom: 100, // Extra space to avoid overlap with the navbar
   },
   header: {
     marginBottom: 20,
     padding: 20,
     backgroundColor: '#6200ee',
     borderRadius: 10,
+    alignItems: 'center',
   },
   headerText: {
     fontSize: 24,
@@ -66,10 +69,16 @@ const styles = StyleSheet.create({
     height: 150,
     marginBottom: 30,
     borderRadius: 75,
+    alignSelf: 'center',
+  },
+  calendar: {
+    marginBottom: 30,
+    borderRadius: 10,
   },
   section: {
     marginBottom: 30,
     paddingHorizontal: 40,
+    alignItems: 'center',
   },
   sectionTitle: {
     fontSize: 20,
@@ -83,17 +92,10 @@ const styles = StyleSheet.create({
     color: '#666',
   },
   buttonContainer: {
-    width: '60%',
     marginBottom: 30,
-  },
-  footer: {
-    padding: 10,
-    backgroundColor: '#6200ee',
-    borderRadius: 10,
-  },
-  footerText: {
-    color: '#fff',
-    fontSize: 14,
-    textAlign: 'center',
+    paddingHorizontal: 20,
+    alignSelf: 'center',
+    width: '100%',
+    paddingBottom: 20,
   },
 });
