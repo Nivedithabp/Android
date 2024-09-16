@@ -11,7 +11,6 @@ export default function Login({ navigation }) {
       const userData = await AsyncStorage.getItem('userData');
       const storedData = userData ? JSON.parse(userData) : null;
 
-      const { email, password } = formData;
       if (storedData && storedData.email === email && storedData.password === password) {
         Alert.alert('Login Successful!');
         console.log('Sign In Data:', { email, password });
