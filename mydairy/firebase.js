@@ -1,4 +1,5 @@
 import { initializeApp } from 'firebase/app';
+import firebase from 'firebase/compat';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 
 // Firebase config (replace this with your own Firebase project config)
@@ -12,7 +13,13 @@ const firebaseConfig = {
   measurementId: "G-FKMECN3TDX"
 };
 
-const app = initializeApp(firebaseConfig);
+let app;
+if (firebase.apps.length === 0) {
+    app = firebase.initializeApp(firebaseConfig);
+} else {
+    app = firebase.app()
+}
 
-// Initialize Firebase Auth
-const auth = getAuth(app);
+const auth = firebase.auth();
+
+export { auth };

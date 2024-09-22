@@ -3,7 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet, Alert, ScrollView, KeyboardA
 import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from './../firebase';
 
 export default function SignUp({ navigation }) {
   const [formData, setFormData] = useState({
@@ -30,7 +30,7 @@ export default function SignUp({ navigation }) {
   const handleSubmit = async () => {
     try {
       // Firebase signup with email and password
-      const userCredential = await auth.createUserWithEmailAndPassword(formData.email, formData.password);
+      const userCredential = await auth.createUserWithEmailAndPassword(email, password)(formData.email, formData.password);
       const user = userCredential.user;
 
       // Optionally store other user data locally or in the cloud
