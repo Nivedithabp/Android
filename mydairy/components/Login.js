@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, StyleSheet, Alert } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { auth } from './../firebase';  // Firebase import for authentication
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState('');
@@ -8,18 +8,18 @@ export default function Login({ navigation }) {
 
   const handleLogin = async () => {
     try {
-      const userData = await AsyncStorage.getItem('userData');
-      const storedData = userData ? JSON.parse(userData) : null;
+      // Firebase login with email and password
+      const userCredential = await auth.signInWithEmailAndPassword(email, password);
+      const user = userCredential.user;
 
-      if (storedData && storedData.email === email && storedData.password === password) {
-        Alert.alert('Login Successful!');
-        console.log('Sign In Data:', { email, password });
-        navigation.navigate('Landing'); // Navigate to landing page
-      } else {
-        Alert.alert('Login Failed', 'Invalid email or password');
-      }
+      Alert.alert('Login Successful!');
+      console.log('User logged in:', user);
+
+      // Navigate to the home screen
+      navigation.navigate('Home');
     } catch (error) {
-      Alert.alert('Error', 'Failed to retrieve data');
+      console.error('Login Error:', error);
+      Alert.alert('Login Failed', error.message);
     }
   };
 
@@ -29,12 +29,14 @@ export default function Login({ navigation }) {
         placeholder="Email" 
         style={styles.input} 
         onChangeText={setEmail} 
+        value={email}
       />
       <TextInput 
         placeholder="Password" 
         secureTextEntry 
         style={styles.input} 
         onChangeText={setPassword} 
+        value={password}
       />
       <Button title="Login" onPress={handleLogin} />
     </View>
