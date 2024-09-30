@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import firebase from 'firebase/compat';
+import { getFirestore } from 'firebase/firestore';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 
 // Firebase config (replace this with your own Firebase project config)
@@ -21,5 +22,6 @@ if (firebase.apps.length === 0) {
 }
 
 const auth = firebase.auth();
+const firestore = getFirestore(app);
 
-export { auth };
+export { auth , createUserWithEmailAndPassword , firestore };
