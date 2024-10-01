@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View, Animated, PanResponder } from 'react-native';
 import { auth } from './../firebase'; // Ensure the firebase config is correct
 import { useNavigation } from '@react-navigation/core';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,13 +9,37 @@ const HomeScreen = () => {
     const [userName, setUserName] = useState('');
     const userEmail = auth.currentUser?.email;
 
-    // Load the user’s name from AsyncStorage
+    // Animation references
+    const opacityAnim = useRef(new Animated.Value(0)).current; // Animation for opacity
+
+    // Gesture position
+    const pan = useRef(new Animated.ValueXY()).current;
+
+    // PanResponder for gestures
+    const panResponder = PanResponder.create({
+        onMoveShouldSetPanResponder: () => true,
+        onPanResponderMove: Animated.event(
+            [null, { dx: pan.x, dy: pan.y }],
+            { useNativeDriver: false }
+        ),
+        onPanResponderRelease: () => {
+            // Animated.spring(pan, { toValue: { x: 0, y: 0 }, useNativeDriver: false }).start();
+        },
+    });
+
+    // Load the user’s name from AsyncStorage and trigger animation
     useEffect(() => {
         const loadUserName = async () => {
             try {
                 const name = await AsyncStorage.getItem('userName');
                 if (name) {
                     setUserName(name);
+                    // Start the opacity animation once name is loaded
+                    Animated.timing(opacityAnim, {
+                        toValue: 1,
+                        duration: 2000,
+                        useNativeDriver: true,
+                    }).start();
                 }
             } catch (error) {
                 console.log('Error loading user name:', error);
@@ -35,8 +59,17 @@ const HomeScreen = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>Name: {userName}</Text>
+            <Animated.Text style={[styles.text, { opacity: opacityAnim }]}>Name: {userName}</Animated.Text>
             <Text style={styles.text}>Email: {userEmail}</Text>
+           
+            {/* Gesture object */}
+            <Animated.View
+                {...panResponder.panHandlers}
+                style={[styles.gestureBox, { transform: pan.getTranslateTransform() }]}
+            >
+                <Text style={styles.gestureText}>Drag me!</Text>
+            </Animated.View>
+
             <TouchableOpacity
                 onPress={handleSignOut}
                 style={styles.button}
@@ -73,5 +106,18 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: '700',
         fontSize: 16,
+    },
+    gestureBox: {
+        width: 100,
+        height: 100,
+        backgroundColor: '#FFA500',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10,
+        marginVertical: 20,
+    },
+    gestureText: {
+        color: '#fff',
+        fontWeight: 'bold',
     },
 });
