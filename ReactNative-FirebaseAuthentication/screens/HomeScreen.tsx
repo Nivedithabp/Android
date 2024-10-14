@@ -56,6 +56,22 @@ const HomeScreen = () => {
             })
             .catch((error) => alert(error.message));
     };
+    const handleImage = () => {
+        auth
+            .signOut()
+            .then(() => {
+                navigation.replace("Image");
+            })
+            .catch((error) => alert(error.message));
+    };
+    const handleLocation = () => {
+        auth
+            .signOut()
+            .then(() => {
+                navigation.replace("Location");
+            })
+            .catch((error) => alert(error.message));
+    };
 
     return (
         <View style={styles.container}>
@@ -75,6 +91,18 @@ const HomeScreen = () => {
                 style={styles.button}
             >
                 <Text style={styles.buttonText}>Sign out</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                onPress={handleImage}
+                style={styles.button}
+            >
+                <Text style={styles.buttonText}>Image</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                onPress={handleLocation}
+                style={styles.button}
+            >
+                <Text style={styles.buttonText}>Location</Text>
             </TouchableOpacity>
         </View>
     );
